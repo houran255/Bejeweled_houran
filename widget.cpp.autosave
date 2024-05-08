@@ -1,0 +1,68 @@
+#include "widget.h"
+#include "ui_widget.h"
+#include <QPixmap>
+#include <QList>
+#include <QLabel>
+#include <QPalette>
+#include "myform.h"
+#include <QIcon>
+
+Widget::Widget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::Widget)
+{
+    ui->setupUi(this);
+
+    resize(1440,900);
+
+    my_form = new MyForm();
+    my_form->show();
+
+    QIcon Icon_2(":/image/Icon_2.png");
+    this->setWindowIcon(Icon_2);
+    this->setWindowTitle(tr("宝石迷阵"));
+
+
+    QPixmap Red(":/image/Red.png");
+    QPixmap Blue(":/image/Blue.png");
+    QPixmap Green(":/image/Green.png");
+    QPixmap Purple(":/image/Purple.png");
+    QPixmap Yellow(":/image/Yellow.png");
+    QPixmap Gray(":/image/Gray.png");
+    QPixmap Orange(":/image/Orange.png");
+    QPixmap Background1(":/image/background1.jpg");
+
+
+    QList <QLabel> s[8][8];
+
+
+    QPalette back;
+    back.setBrush(backgroundRole(),QPixmap(Background1));
+    this->setPalette(back);
+
+    QObject::connect(my_form,&MyForm::emit_Start,this,&Widget::slots_Start);
+    QObject::connect(this,&Widget::emit_back,my_form,&MyForm::slots_back);
+
+    QPalette Color;
+    Color.setBrush(backgroundRole(),QPixmap(Red));
+
+
+
+
+}
+
+Widget::~Widget()
+{
+    delete ui;
+}
+
+void Widget::slots_Start()
+{
+    this->show();
+}
+
+void Widget::on_pushButton_clicked()
+{
+    emit emit_back();
+    this->hide();
+}
